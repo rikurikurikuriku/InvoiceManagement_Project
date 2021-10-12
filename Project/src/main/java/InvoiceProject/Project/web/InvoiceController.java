@@ -1,15 +1,23 @@
 package InvoiceProject.Project.web;
 
+import java.io.IOException; 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List; 
 import java.util.Optional;
+import java.util.Properties;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,20 +27,28 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.spring5.ISpringTemplateEngine;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
+import InvoiceProject.Project.domain.File;
+import InvoiceProject.Project.domain.FileRepository;
 import InvoiceProject.Project.domain.Invoice;
 import InvoiceProject.Project.domain.InvoiceRepository;
 import InvoiceProject.Project.domain.TypeRepository;
+import InvoiceProject.Project.domain.UserRepository;
 
 
 
 @Controller
 public class InvoiceController {
+	
+	@Value("${upload.path}")
+	private String uploadFolder;
 	
 	@Autowired
 	private InvoiceRepository invoicepository;
@@ -40,12 +56,18 @@ public class InvoiceController {
 	@Autowired
 	private TypeRepository typespository;
 	
+	@Autowired
+	private FileRepository fepository; 
+	
+	@Autowired
+	private UserRepository upository;
 
 
 	@RequestMapping("/invoices")
 	public String allInvoices(Model model) {
 		
 		model.addAttribute("invoices", invoicepository.findAll());
+		model.addAttribute("users", upository.findAll());
 		model.addAttribute("standardDate", new Date());
 		model.addAttribute("localDateTime", LocalDateTime.now());
 		model.addAttribute("localDate", LocalDate.now());
@@ -65,6 +87,7 @@ public class InvoiceController {
 	// RESTful to get all invoices
     @RequestMapping(value="/invs", method = RequestMethod.GET)
     public @ResponseBody List<Invoice>invoiceListRest() {	
+    	
         return (List<Invoice>) invoicepository.findAll();
     }    
     
@@ -79,7 +102,6 @@ public class InvoiceController {
 		model.addAttribute("invoice", new Invoice());
 		model.addAttribute("types", typespository.findAll());
 		model.addAttribute("invoices", invoicepository.findAll());
-		
 		model.addAttribute("standardDate", new Date());
 		model.addAttribute("localDateTime", LocalDateTime.now());
 		model.addAttribute("localDate", LocalDate.now());
@@ -101,7 +123,6 @@ public class InvoiceController {
 		model.addAttribute("localDateTime", LocalDateTime.now());
 		model.addAttribute("localDate", LocalDate.now());
 		model.addAttribute("timestamp", Instant.now());
-	    
 	    model.addAttribute("invoice", invoice);
 	    model.addAttribute("types", typespository.findAll());
 	    return "edit";
@@ -134,5 +155,15 @@ public class InvoiceController {
 		invoicepository.deleteById(id);
 	        return "redirect:../invoices";
 	    }     
+	
+	@GetMapping("/files")
+	public String fileList(Model model) {
+	model.addAttribute("files", fepository.findAll());
+	return "filelist";
+	}
+	
+	
+	
 }
+
 

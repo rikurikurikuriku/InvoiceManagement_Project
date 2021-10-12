@@ -13,8 +13,11 @@
 
 <div class="col-md-4">
 		<h2 th:inline="text">Welcome [[${#httpServletRequest.remoteUser}]]</h2>
-		<p th:inline="text"> Page accessed: [[${#temporals.format(localDateTime, 'dd-MM-yyyy HH:mm:ss')}]]</p>
+		<p th:inline="text"> Page accessed: [[${#temporals.format(localDateTime, 'dd.MM.yyyy HH:mm:ss')}]]</p>
+		<p th:text="${msg}" />
 	</div>
+	
+ 
 
 <div class="col-md-4" style="padding:20px 0">
 		<form th:action="@{/logout}" method="post">
@@ -28,27 +31,28 @@
 <th>Product</th>
 <th>Invoice Date</th>
 <th>Due Date</th>
-<th>Amount</th>
+<th>Amount (€)</th>
 <th>Invoice Department</th>
 <th>File Submission</th>
 </tr>
 <tr th:each = "invoice : ${invoices}">
 	<td th:text="${invoice.biller}"></td>
 	<td th:text="${invoice.product}"></td>
-	<td th:text="${invoice.date}"></td>
-	<td th:text="${invoice.duedate}"></td>
+	<td th:text="${#dates.format(invoice.date, 'dd.MM.yyyy')}"></td>
+	<td th:text="${#dates.format(invoice.duedate, 'dd.MM.yyyy')}"></td>
 	<td th:text="${invoice.amount}"></td>
-	<td th:text="${invoice.type.name}"></td> 	
+	<td th:text="${invoice.type.name}"></td>
+	
+
 	
 	<td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/delete/{id}(id=${invoice.id})}" class="btn btn-xs btn-danger">Delete</a></td>
 	<td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/edit/{id}(id=${invoice.id})}" class="btn btn-info">Edit</a></td>
-	<td method="POST" action="/upload" enctype="multipart/form-data">
-	<input type="file" name="file" /><br/>
-	<input type="submit" value="Submit" />
 
 </tr>
 </table>
 <a href="/add"  class="btn btn-success"> Add an invoice </a>
+
+
 </body>
 
 

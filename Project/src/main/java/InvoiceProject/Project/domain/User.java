@@ -1,10 +1,14 @@
 package InvoiceProject.Project.domain;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column; 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class User {
@@ -16,6 +20,9 @@ public class User {
 
 	    @Column(name = "username", nullable = false, unique = true)
 	    private String username;
+	    
+	    @OneToMany(cascade = CascadeType.ALL, mappedBy = "users")
+		private List<User> users;
 
 	    @Column(name = "password", nullable = false)
 	    private String passwordH;
@@ -64,6 +71,16 @@ public class User {
 		public void setRole(String role) {
 			this.role = role;
 		}
+
+		public List<User> getUsers() {
+			return users;
+		}
+
+		public void setUsers(List<User> users) {
+			this.users = users;
+		}
+		
+		
 
 	}
 

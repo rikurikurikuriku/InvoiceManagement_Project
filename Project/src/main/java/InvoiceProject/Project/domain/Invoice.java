@@ -1,6 +1,8 @@
 package InvoiceProject.Project.domain;
 
-import javax.persistence.Entity;
+import java.util.Date;
+
+import javax.persistence.Entity;  
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -9,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -23,7 +27,8 @@ public class Invoice {
 	@Size(min=2, max=30)
 	private String biller, product;
 	@NotNull
-	private long date, duedate;
+	@DateTimeFormat(pattern = "dd.MM.yyyy")
+	private Date date, duedate;
 	@NotNull
 	private double amount;
 	
@@ -31,14 +36,14 @@ public class Invoice {
 	@JoinColumn(name = "typeid")
 	@JsonIgnore
 	private Type type;
-
+	
 
 
 	public Invoice() {}
 
 
 
-	public Invoice(long id, String biller, String product, long date, long duedate, double amount, Type type) {
+	public Invoice(long id, String biller, String product, Date date, Date duedate, double amount, Type type) {
 		super();
 		this.id = id;
 		this.biller = biller;
@@ -87,25 +92,25 @@ public class Invoice {
 
 
 
-	public long getDate() {
+	public Date getDate() {
 		return date;
 	}
 
 
 
-	public void setDate(long date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 
 
 
-	public long getDuedate() {
+	public Date getDuedate() {
 		return duedate;
 	}
 
 
 
-	public void setDuedate(long duedate) {
+	public void setDuedate(Date duedate) {
 		this.duedate = duedate;
 	}
 
@@ -135,11 +140,17 @@ public class Invoice {
 
 
 
+
+
+
 	@Override
 	public String toString() {
 		return "Invoice [id=" + id + ", biller=" + biller + ", product=" + product + ", date=" + date + ", duedate="
-				+ duedate + ", amount=" + amount + "]";
+				+ duedate + ", amount=" + amount + ", type=" + type + "]";
 	}
+
+
+
 	
 	
 

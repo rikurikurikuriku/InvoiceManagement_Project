@@ -12,6 +12,10 @@
 <head>
 	<title> Add Invoices </title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link th:rel="stylesheet" th:href="@{assets/bootstrap-datepicker/css/bootstrap-datepicker.css}"/>
+    <link th:rel="stylesheet" th:href="@{assets/bootstrap-datepicker/css/bootstrap-datepicker.standalone.css}"/>
+    <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+    <link th:rel="stylesheet" th:href="@{webjars/font-awesome/5.11.2/css/all.css} "/>
 </head>
 <body>
 <h1> Add an invoice </h1>
@@ -24,14 +28,22 @@
 <label for="Product">Product</label>
 <input type="text" class = "form-control"  id="product" th:field="*{product}" placeholder="Product"/>
 </div>
-<div class="form-group">
+<div class="form-group row">
+<div class="col-md-4 mt-5">
 <label for="date">Invoice Date</label>
-<input type="text" class="form-control" name="datepicker" id="datepicker" th:field="*{date}"/>
-</div>
-<div class="form-group">
-<label for="duedate">Due Date</label>
-<input type="text" class = "form-control" name="datepicker" id="datepicker" th:field="*{duedate}"/>
-</div>
+<div class="input-group date">
+<input type="text" class="form-control" id="date" autocomplete="off" th:field="*{date}"/>
+<div class="input-group-append">
+<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+ </div></div></div></div>
+<div class="form-group row">
+<div class="col-md-4 mt-5">
+<label for="date">Due Date</label>
+<div class="input-group date">
+<input type="text" class="form-control" id="duedate" autocomplete="off" th:field="*{duedate}"/>
+<div class="input-group-append">
+<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+ </div></div></div></div>
 <div class="form-group">
 <label for="amount">Amount (€)</label>
 <input type="text" class = "form-control"  id="amount" th:field="*{amount}" placeholder="Amount" />
@@ -41,8 +53,20 @@
 <option th:each="type: ${types}" th:value="${type.typeid}" th:text="${type.name}"></option>
 </select>
 <input type="submit" value="Save"></input>
-
 </form>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{assets/bootstrap-datepicker/js/bootstrap-datepicker.js}"></script>
+
+<script>
+    $('.input-group.date').datepicker({
+        autoclose: true,
+        todayHighlight: true,
+        format: "dd.mm.yyyy"
+    });
+</script>
 </body>
 
 
