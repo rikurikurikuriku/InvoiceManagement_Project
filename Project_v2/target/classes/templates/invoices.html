@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+	<title> Invoices </title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}" />
+</head>
+
+<body>
+<h1> Invoices </h1>
+
+<div class="col-md-4">
+		<h2 th:inline="text">Welcome [[${#httpServletRequest.remoteUser}]]</h2>
+		<p th:inline="text"> Page accessed: [[${#temporals.format(localDateTime, 'dd.MM.yyyy HH:mm:ss')}]]</p>
+		<p th:text="${msg}" />
+	</div>
+	
+ 
+
+<div class="col-md-4" style="padding:20px 0">
+		<form th:action="@{/logout}" method="post">
+			<input type="submit" value="Sign Out" class="btn btn-sm btn-danger"/>
+		</form>
+	</div>
+	
+	<input id="fileupload" type="file" name="fileupload" /> 
+	<button id="upload-button" onclick="uploadFile()"> Upload </button>
+
+<table class="table table-striped">
+<tr>
+<th>Biller</th>
+<th>Product</th>
+<th>Invoice Date</th>
+<th>Due Date</th>
+<th>Amount (€)</th>
+<th>Invoice Department</th>
+<th>File Submission</th>
+</tr>
+<tr th:each = "invoice : ${invoices}">
+	<td th:text="${invoice.biller}"></td>
+	<td th:text="${invoice.product}"></td>
+	<td th:text="${#dates.format(invoice.date, 'dd.MM.yyyy')}"></td>
+	<td th:style="${invoice.duedate.before(#dates.createNow()) ? 'color: red;' : 'color: black;'}" th:text="${#dates.format(invoice.duedate, 'dd.MM.yyyy')}"></td>
+	<td th:text="${invoice.amount}"></td>
+	<td th:text="${invoice.type.name}"></td>
+	<td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/delete/{id}(id=${invoice.id})}" class="btn btn-xs btn-danger">Delete</a></td>
+	<td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/edit/{id}(id=${invoice.id})}" class="btn btn-info">Edit</a></td>
+</tr>
+</table>
+<a href="/add"  class="btn btn-success"> Add an invoice </a>
+
+<script>
+async function uploadFile() {
+  let formData = new FormData(); 
+  formData.append("file", fileupload.files[0]);
+  let response = await fetch('/upload', {
+    method: "POST", 
+    body: formData
+  }); 
+
+  if (response.status == 200) {
+    alert("Invoice uploaded.");
+  } else 
+	  alert("Invoice upload failed.");
+} 
+</script>
+
+</body>
+
+
+</html>
