@@ -1,5 +1,6 @@
 package InvoiceProject.Project;
 
+import java.util.Date;
 import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class InvoiceProjectApplication {
 		repository1.save(new Type("HR"));
 		repository1.save(new Type("Office Management"));
 		repository1.save(new Type("IT"));
+		
+		repository.save(new Invoice(1, "Moikka Oy", "1234567", new Date(2021-12-12), new Date(2021-12-16), 10.50,
+			repository1.findByName("IT").get(0)));
 		
 		upository.save(new User("riku", "$2a$10$KaLs67SscV5FeBSfEL0uzOWrYOSn8mIjHDsvOz92qUojbbF8e5Teq", "USER"));
 		upository.save(new User("admin", "$2a$10$.hNvlY5bSglHlmVzQxHOTuCFkWHP.xvNUMLGTHchpNroK7VFHmq/q", "ADMIN"));
